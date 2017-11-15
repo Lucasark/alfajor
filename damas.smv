@@ -39,7 +39,7 @@ MODULE jogador(id, tabuleiro, turno, num_peças_jog1, num_peças_jog2)
   		next(state) :=  case
                     	state = ocioso : {ocioso, iniciando_turno};
                     	state = iniciando_turno & jogador1 = 1 & !turno : comendo;
-                    	state = iniciando_turno & jogador2 = 2 & turn : comendo;
+                    	state = iniciando_turno & jogador2 = 2 & turno : comendo;
                     	state = comendo : {comendo, andando, terminando_turno};
                     	state = andando : {andando, terminado_turno};
                     	state = terminando_turno : ocioso;
