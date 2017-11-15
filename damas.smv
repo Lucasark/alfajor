@@ -29,10 +29,11 @@ MODULE andar(tabuleiro,pos_atual,pos_fut)
 		
 	DEFINE
 
-MODULE jogador(id, tabuleiro, turno, num_peças_jog1, num_peças_jog2)
+MODULE jogador(tabuleiro, turno, num_peças_jog1, num_peças_jog2)
 MODULE main
 VAR
-    id: integer;
+    jogador1 := 1;
+    jogador2 := 2;
     tabuleiro : array 1..8 of array 1..8 of {-1, 0, 1, 2, 3, 4};
     turno: boolean;
     num_peças1: 1..12;
