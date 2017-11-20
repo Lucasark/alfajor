@@ -1,15 +1,11 @@
 --
---					P1
---	  __1___2___3___4___5___6___7___8__
---	1 |-1 |_1_|-1_|_1_|-1_|_1_|-1_|_1_| 
---	2 |_1_|-1_|_1_|-1_|_1_|-1_|_1_|-1_| 
---	3 |-1_|_0_|-1_|_0_|-1_|_0_|-1_|_0_| 
---	4 |_0_|-1_|_0_|-1_|_0_|-1_|_0_|-1_| 
---	5 |-1_|_0_|-1_|_0_|-1_|_0_|-1_|_0_| 
---	6 |_0_|-1_|_0_|-1_|_0_|-1_|_0_|-1_| 
--- 	7 |-1_|_3_|-1_|_3_|-1_|_3_|-1_|_3_| 
---	8 |_3_|-1_|_3_|-1_|_3_|-1 |_3_|-1_| 
---					P2
+--			P1
+--	  __1___2___3___4__
+--	1 |-1 |_0_|-1_|_1_| 
+--	2 |_0_|-1_|_0_|-1_|
+--	3 |-1_|_0_|-1_|_0_| 
+--	4 |_3_|-1_|_0_|-1_| 
+--			P2
 --
 --	Significados dos Blocos: 
 --  1 	-> P1.normal
@@ -20,173 +16,117 @@
 --  0	-> Espaço Vazio
 --
 --
-MODULE andar(tabuleiro,pos_atual,pos_fut)
-	VAR
-		,
-	ASSIGN
-		next(tabuleiro[pos_atual]) := tabuleiro[pos_fut]
-		next(tabuleiro[pos_fut]) 
-		
-	DEFINE
-
-MODULE jogador(id, tabuleiro, turno, num_peças_jog1, num_peças_jog2)
-	VAR
-		state : {ocioso, inciando_turno, comendo, andando, terminando_turno};
-		jogador1 := 1;
-    		jogador2 := 2;
-	ASSIGN
-		init(state) := ocioso;
-  		next(state) :=  case
-                    	state = ocioso : {ocioso, iniciando_turno};
-                    	state = iniciando_turno & jogador1 = 1 & !turno : comendo;
-                    	state = iniciando_turno & jogador2 = 2 & turno : comendo;
-                    	state = comendo : {comendo, andando, terminando_turno};
-                    	state = andando : {andando, terminado_turno};
-                    	state = terminando_turno : ocioso;
-                    	TRUE : state;
-                    esac;
-		
-		next(turno) :=  case
-                	state = terminando_turno : !turno;
-                	TRUE : turno;
-                esac;
-	
 MODULE main
 	VAR
-    		tabuleiro : array 1..8 of array 1..8 of {-1, 0, 1, 2, 3, 4};
-    		turno: boolean;
-    		num_peças1: 1..12;
-    		num_peças2: 1..12;
+	    tabuleiro : array 1..4 of array 1..4 of {-1, 0, 1, 2, 3, 4};
+	    turno: boolean; --TRUE - J1 | FALSE - J2
+	    num_pecas1: 1..8;
+	    num_pecas2: 1..8;
+	    linha: 1..8;
+	    coluna: 1..8;
+
 	ASSIGN
-		init(turno) := FALSE;
-		init(num_pieces1) := 8;
-		init(num_pieces2) := 8;
+		init(turno) := TRUE;
+		init(num_pecas1) := 1;
+		init(num_pecas2) := 1;
 			
 			--INACESSÍVEIS
 		init(tabuleiro[1][1]) := -1;
 		init(tabuleiro[1][3]) := -1;
-		init(tabuleiro[1][5]) := -1;
-		init(tabuleiro[1][7]) := -1;
 		
 		init(tabuleiro[2][2]) := -1;
 		init(tabuleiro[2][4]) := -1;
-		init(tabuleiro[2][6]) := -1;
-		init(tabuleiro[2][8]) := -1;
-		
+
 		init(tabuleiro[3][1]) := -1;
 		init(tabuleiro[3][3]) := -1;
-		init(tabuleiro[3][5]) := -1;
-		init(tabuleiro[3][7]) := -1;
-		
+	
 		init(tabuleiro[4][2]) := -1;
 		init(tabuleiro[4][4]) := -1;
-		init(tabuleiro[4][6]) := -1;
-		init(tabuleiro[4][8]) := -1;
-		
-		init(tabuleiro[5][1]) := -1;
-		init(tabuleiro[5][3]) := -1;
-		init(tabuleiro[5][5]) := -1;
-		init(tabuleiro[5][7]) := -1;
-		
-		init(tabuleiro[6][2]) := -1;
-		init(tabuleiro[6][4]) := -1;
-		init(tabuleiro[6][6]) := -1;
-		init(tabuleiro[6][8]) := -1;
-		
-		init(tabuleiro[7][1]) := -1;
-		init(tabuleiro[7][3]) := -1;
-		init(tabuleiro[7][5]) := -1;
-		init(tabuleiro[7][7]) := -1;
-		
-		init(tabuleiro[8][2]) := -1;
-		init(tabuleiro[8][4]) := -1;
-		init(tabuleiro[8][6]) := -1;
-		init(tabuleiro[8][8]) := -1;
-		
+		init(linha) := 1;
+		init(coluna) := 4;
+
 		--P1
 		--LINHA 1
-		init(tabuleiro[1][2]) := 1;
+		init(tabuleiro[1][2]) := 0;
 		init(tabuleiro[1][4]) := 1;		
-		init(tabuleiro[1][6]) := 1;		
-		init(tabuleiro[1][8]) := 1;
+
 		--LINHA 2
-		init(tabuleiro[2][1]) := 1;
-		init(tabuleiro[2][3]) := 1;
-		init(tabuleiro[2][5]) := 1;
-		init(tabuleiro[2][7]) := 1;
+		init(tabuleiro[2][1]) := 0;
+		init(tabuleiro[2][3]) := 0;
 		--FIMP1
-		
+
+		--P2 
 		--LINHA 3
 		init(tabuleiro[3][2]) := 0;
 		init(tabuleiro[3][4]) := 0;		
-		init(tabuleiro[3][6]) := 0;		
-		init(tabuleiro[3][8]) := 0;
 		--LINHA 4
-		init(tabuleiro[4][1]) := 0; 
-		init(tabuleiro[4][3]) := 0;		
-		init(tabuleiro[4][5]) := 0;		
-		init(tabuleiro[4][7]) := 0;
-		--LINHA 5
-		init(tabuleiro[5][2]) := 0;
-		init(tabuleiro[5][4]) := 0;
-		init(tabuleiro[5][6]) := 0;
-		init(tabuleiro[5][8]) := 0;
-		--LINHA 6
-		init(tabuleiro[6][1]) := 0; 		
-		init(tabuleiro[6][3]) := 0;		
-		init(tabuleiro[6][5]) := 0;		
-		init(tabuleiro[6][7]) := 0;
-		
-		--P2 
-		--LINHA 7
-		init(tabuleiro[7][2]) := 3;		
-		init(tabuleiro[7][4]) := 3;
-		init(tabuleiro[7][6]) := 3;
-		init(tabuleiro[7][8]) := 3;
-		-- LINHA 8
-		init(tabuleiro[8][1]) := 3;
-		init(tabuleiro[8][3]) := 3;
-		init(tabuleiro[8][5]) := 3;
-		init(tabuleiro[8][7]) := 3;
-		--FIMP2
-		
+		init(tabuleiro[4][1]) := 3; 
+		init(tabuleiro[4][3]) := 0;	
+		--FIM P2	
+	ASSIGN
 		--ESPAÇOS BLOQUEADOS
 		next(tabuleiro[1][1]) := -1;
 		next(tabuleiro[1][3]) := -1;
-		next(tabuleiro[1][5]) := -1;
-		next(tabuleiro[1][7]) := -1;
 		
 		next(tabuleiro[2][2]) := -1;
 		next(tabuleiro[2][4]) := -1;
-		next(tabuleiro[2][6]) := -1;
-		next(tabuleiro[2][8]) := -1;
 		
 		next(tabuleiro[3][1]) := -1;
 		next(tabuleiro[3][3]) := -1;
-		next(tabuleiro[3][5]) := -1;
-		next(tabuleiro[3][7]) := -1;
 		
 		next(tabuleiro[4][2]) := -1;
 		next(tabuleiro[4][4]) := -1;
-		next(tabuleiro[4][6]) := -1;
-		next(tabuleiro[4][8]) := -1;
+
+		--ESPAÇOS LIVRES
+		next(tabuleiro[1][4]) := 	case
+									linha = 1 & coluna = 4 & (tabuleiro[1][4] = 1 & turno = TRUE) | (tabuleiro[1][4] = 3 & turno = FALSE): 0;
+									TRUE: tabuleiro[1][4];
+									esac;
+
+		next(tabuleiro[1][2]) := 	case
+									TRUE: tabuleiro[1][2];
+									esac;
+
+
+		next(tabuleiro[2][1]) := 	case
+
+										
+									TRUE: tabuleiro[1][2];
+									esac;
+
+		next(tabuleiro[2][3]) := 	case --C -> [1][2] [3][2] & [3][4]
+									linha = 2 & coluna = 3 & (tabuleiro[2][3] = 1 & turno = TRUE) | (tabuleiro[2][3] = 3 & turno = FALSE): 0;
+									linha = 1 & coluna = 4 & turno = TRUE & tabuleiro[1][4] = 1: 1;
+									linha = 3 & coluna = 2 & turno = FALSE & tabuleiro[3][2] = 3: 3;
+									linha = 3 & coluna = 4 & turno = FALSE & tabuleiro[3][4] = 3: 3;
+									TRUE: tabuleiro[3][4];
+									esac;
+
+		next(tabuleiro[3][2]) :=	case
+
+										
+									TRUE: tabuleiro[1][2];
+									esac;
+
+		next(tabuleiro[3][4]) :=	case
+
+										
+									TRUE: tabuleiro[4][3];
+									esac;
+
+		next(tabuleiro[4][1]) :=	case
+
+									TRUE: tabuleiro[1][2];
+									esac;
+
+		next(tabuleiro[4][3]) :=	case
+
+										
+									TRUE: tabuleiro[1][2];
+									esac;	
+
+		next(linha) := 1;
+		next(coluna) := 4;
+		SPEC
+			!EF(tabuleiro[1][4] = 0)
 		
-		next(tabuleiro[5][1]) := -1;
-		next(tabuleiro[5][3]) := -1;
-		next(tabuleiro[5][5]) := -1;
-		next(tabuleiro[5][7]) := -1;
-		
-		next(tabuleiro[6][2]) := -1;
-		next(tabuleiro[6][4]) := -1;
-		next(tabuleiro[6][6]) := -1;
-		next(tabuleiro[6][8]) := -1;
-		
-		next(tabuleiro[7][1]) := -1;
-		next(tabuleiro[7][3]) := -1;
-		next(tabuleiro[7][5]) := -1;
-		next(tabuleiro[7][7]) := -1;
-		
-		next(tabuleiro[8][2]) := -1;
-		next(tabuleiro[8][4]) := -1;
-		next(tabuleiro[8][6]) := -1;
-		next(tabuleiro[8][8]) := -1;
