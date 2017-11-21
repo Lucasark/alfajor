@@ -22,13 +22,14 @@ MODULE main
 	    turno: boolean; --TRUE - J1 | FALSE - J2
 	    num_pecas1: 1..8;
 	    num_pecas2: 1..8;
-	    linha: 1..8;
-	    coluna: 1..8;
-
+	    linha: 1..4;
+	    coluna: 1..4;
+	    estado: {andando, parado, vez_de_jogar, finalizado};
 	ASSIGN
 		init(turno) := TRUE;
 		init(num_pecas1) := 1;
 		init(num_pecas2) := 1;
+		init(estado) := parado;
 			
 			--INACESSÍVEIS
 		init(tabuleiro[1][1]) := -1;
@@ -78,8 +79,11 @@ MODULE main
 		next(tabuleiro[4][4]) := -1;
 
 		--ESPAÇOS LIVRES
+
+									--[2][3]
 		next(tabuleiro[1][4]) := 	case
 									linha = 1 & coluna = 4 & (tabuleiro[1][4] = 1 & turno = TRUE) | (tabuleiro[1][4] = 4 & turno = FALSE): 0;
+									linha = 2 & coluna = 3 & turno = TRUE & tabuleiro[2][3] = 3: 3;
 									TRUE: tabuleiro[1][4];
 									esac;
 
@@ -91,41 +95,85 @@ MODULE main
 		next(tabuleiro[2][1]) := 	case
 
 										
-									TRUE: tabuleiro[1][2];
+									TRUE: tabuleiro[2][1];
 									esac;
 
-		next(tabuleiro[2][3]) := 	case --C -> [1][2] [3][2] & [3][4]
+		next(tabuleiro[2][3]) := 	case ---M1 [3][2] | [3][4] ---M2 [1][4]
 									linha = 2 & coluna = 3 & (tabuleiro[2][3] = 1 & turno = TRUE) | (tabuleiro[2][3] = 3 & turno = FALSE): 0;
 									linha = 1 & coluna = 4 & turno = TRUE & tabuleiro[1][4] = 1: 1;
 									linha = 3 & coluna = 2 & turno = FALSE & tabuleiro[3][2] = 3: 3;
 									linha = 3 & coluna = 4 & turno = FALSE & tabuleiro[3][4] = 3: 3;
-									TRUE: tabuleiro[3][4];
+									TRUE: tabuleiro[2][3];
 									esac;
 
 		next(tabuleiro[3][2]) :=	case
-
-										
-									TRUE: tabuleiro[1][2];
+									linha = 3 & coluna = 2 & (tabuleiro[2][3] = 1 & turno = TRUE) | (tabuleiro[2][3] = 3 & turno = FALSE): 0;
+									linha = 2 & coluna = 3 & turno = TRUE & tabuleiro[2][3] = 1: 1;
+									linha = 3 & coluna = 2 & turno = FALSE & tabuleiro[3][2] = 3: 3;
+									linha = 3 & coluna = 4 & turno = FALSE & tabuleiro[3][4] = 3: 3;
+									TRUE: tabuleiro[3][2];
 									esac;
 
 		next(tabuleiro[3][4]) :=	case
 
 										
-									TRUE: tabuleiro[4][3];
+									TRUE: tabuleiro[3][4];
 									esac;
 
+									--[3][2]
 		next(tabuleiro[4][1]) :=	case
-									linha = 4 & coluna = 1 & (tabuleiro[1][4] = 2 & turno = TRUE) | (tabuleiro[1][4] = 3 & turno = FALSE): 0;
-									TRUE: tabuleiro[1][2];
+									linha = 3 & coluna = 2 & (tabuleiro[3][2] = 2 & turno = TRUE) | (tabuleiro[1][4] = 3 & turno = FALSE): 0;
+									linha = 2 & coluna = 3 & turno = TRUE & tabuleiro[2][3] = 1: 1;
+									TRUE: tabuleiro[4][1];
 									esac;
 
 		next(tabuleiro[4][3]) :=	case
 
-									TRUE: tabuleiro[1][2];
+									TRUE: tabuleiro[4][3];
 									esac;	
+		--LINHAS E COLUNAS
 
-		next(linha) := 1;
-		next(coluna) := 4;
+		next(linha) := 	case
+						tabuleiro[1][4] = 1 & turno = TRUE: {1,2,3,4};
+						TRUE: linha;
+						esac;
+
+		next(coluna) := case
+						tabuleiro[1][4] = 1 & turno = TRUE: {2,3,4};
+						TRUE: coluna;
+						esac;
+
+		--NUMERO DE PECAS
+
+		next(num_pecas1) := case
+							--[1][2]
+							
+							TRUE: num_pecas1;
+							esac;
+
+		next(num_pecas2) := case
+							TRUE: num_pecas2;
+							esac;
+		--ESTADO POSSIVEIS
+		next(estado) := 	case
+								estado = parado : {vez_de_jogar};
+								estado = vez_de_jogar : {andando};
+								estado = andando : {parado};
+								num_pecas1 = 0 | num_pecas2 = 0: {finalizado};
+							TRUE: estado;
+							esac;
+
+		--turnos
+		next(turno) := 	case
+						estado = vez_de_jogar: 
+							case 
+								turno = TRUE: FALSE;
+								turno = FALSE: TRUE;
+							TRUE: turno;
+							esac;
+						TRUE: turno;
+						esac;
+
 		SPEC
-			!EF(tabuleiro[1][4] = 0)
+			AF(estado = finalizado);
 		
