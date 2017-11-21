@@ -79,7 +79,7 @@ MODULE main
 
 		--ESPAÇOS LIVRES
 		next(tabuleiro[1][4]) := 	case
-									linha = 1 & coluna = 4 & (tabuleiro[1][4] = 1 & turno = TRUE) | (tabuleiro[1][4] = 3 & turno = FALSE): 0;
+									linha = 1 & coluna = 4 & (tabuleiro[1][4] = 1 & turno = TRUE) | (tabuleiro[1][4] = 4 & turno = FALSE): 0;
 									TRUE: tabuleiro[1][4];
 									esac;
 
@@ -115,13 +115,12 @@ MODULE main
 									esac;
 
 		next(tabuleiro[4][1]) :=	case
-
+									linha = 4 & coluna = 1 & (tabuleiro[1][4] = 2 & turno = TRUE) | (tabuleiro[1][4] = 3 & turno = FALSE): 0;
 									TRUE: tabuleiro[1][2];
 									esac;
 
 		next(tabuleiro[4][3]) :=	case
 
-										
 									TRUE: tabuleiro[1][2];
 									esac;	
 
