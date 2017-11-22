@@ -1,8 +1,8 @@
 --
 --			P1
 --	  __1___2___3___4__
---	1 |-1 |_0_|-1_|_1_| 
---	2 |_0_|-1_|_0_|-1_|
+--	1 |-1 |_0_|-1_|_1_|  	/ \			 |
+--	2 |_0_|-1_|_0_|-1_|		 | Descer 	\ / Subir
 --	3 |-1_|_0_|-1_|_0_| 
 --	4 |_3_|-1_|_0_|-1_| 
 --			P2
@@ -17,19 +17,114 @@
 --
 --
 MODULE main
+
 	VAR
 	    tabuleiro : array 1..4 of array 1..4 of {-1, 0, 1, 2, 3, 4};
 	    turno: boolean; --TRUE - J1 | FALSE - J2
-	    num_pecas1: 1..8;
-	    num_pecas2: 1..8;
-	    linha: 1..4;
-	    coluna: 1..4;
+	    num_pecas1: 0..4;
+	    num_pecas2: 0..4;
+	    linha: {1,2,3,4};
+	    coluna: {1,2,3,4};
 	    estado: {andando, parado, vez_de_jogar, finalizado};
+
+	DEFINE
+
+		--1 CASA
+		linhaCima :=case
+					linha+1 < 4: linha + 1;
+					TRUE: linha;
+					esac;
+
+		linhaBaixo :=case
+					linha - 1 > 0: linha - 1;
+					TRUE: linha;
+					esac;
+		colunaEsq :=case
+					TRUE: coluna;
+					esac;
+		colunaDir :=case
+					TRUE: coluna;
+					esac;
+		diagDir :=	case
+					TRUE: 1;
+					esac;
+		diagEsq :=	case
+					TRUE: 1;
+					esac;
+
+		--2 CASA
+
+		linhaCima2 := 	case
+						linha+2 < 4: linha + 2;
+						TRUE: linha;
+						esac;
+
+		linhaBaixo2 := 	case
+						linha - 2 > 0: linha - 2;
+						TRUE: linha;
+						esac;
+		colunaEsq2 :=	case
+						TRUE: coluna;
+						esac;
+		colunaDir2 :=	case
+						TRUE: coluna;
+						esac;
+		diagDir2 :=	case
+					TRUE: 1;
+					esac;
+		diagEsq2 :=	case
+					TRUE: 1;
+					esac;
+
+		--3 CASA
+		linhaCima3 := 	case
+						linha+3 < 4: linha + 3;
+						TRUE: linha;
+						esac;
+
+		linhaBaixo3 := 	case
+						linha - 3 > 0: linha - 3;
+						TRUE: linha;
+						esac;
+		colunaEsq3 :=	case
+						TRUE: coluna;
+						esac;
+		colunaDir3 :=	case
+						TRUE: coluna;
+						esac;
+		diagDir3 :=	case
+					TRUE: 1;
+					esac;
+		diagEsq3 :=	case
+					TRUE: 1;
+					esac;
+
+		valido_andar := case
+							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 1 & tabuleiro[linhaCima][diagEsq] = 0: TRUE;
+							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 4: case
+								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0: TRUE;
+								TRUE: FALSE;
+								esac;
+						TRUE: FALSE;
+						esac;
+
+		valido_comer := case
+
+						TRUE: FALSE;
+						esac;
+		casa_valida :=	case
+
+						TRUE: FALSE;
+						esac;
+
+		
 	ASSIGN
 		init(turno) := TRUE;
 		init(num_pecas1) := 1;
 		init(num_pecas2) := 1;
-		init(estado) := parado;
+		init(estado) := andando;
 			
 			--INACESSÍVEIS
 		init(tabuleiro[1][1]) := -1;
@@ -80,17 +175,19 @@ MODULE main
 
 		--ESPAÇOS LIVRES
 
-									--[2][3]
-		next(tabuleiro[1][4]) := 	case
-									linha = 1 & coluna = 4 & (tabuleiro[1][4] = 1 & turno = TRUE) | (tabuleiro[1][4] = 4 & turno = FALSE): 0;
-									linha = 2 & coluna = 3 & turno = TRUE & tabuleiro[2][3] = 3: 3;
-									TRUE: tabuleiro[1][4];
-									esac;
-
+									--
 		next(tabuleiro[1][2]) := 	case
+
 									TRUE: tabuleiro[1][2];
 									esac;
 
+									--[2][3]
+		next(tabuleiro[1][4]) := 	case
+									--Deixa livre comendo ou andando
+									linha = 1 & coluna = 4 & (valido_andar | valido_comer): 0;
+									--Entra uma peça comendo ou andando FAZER
+									TRUE: tabuleiro[1][4];
+									esac;
 
 		next(tabuleiro[2][1]) := 	case
 
@@ -98,7 +195,8 @@ MODULE main
 									TRUE: tabuleiro[2][1];
 									esac;
 
-		next(tabuleiro[2][3]) := 	case ---M1 [3][2] | [3][4] ---M2 [1][4]
+									---M1 [3][2] | [3][4] ---M2 [1][4]
+		next(tabuleiro[2][3]) := 	case
 									linha = 2 & coluna = 3 & (tabuleiro[2][3] = 1 & turno = TRUE) | (tabuleiro[2][3] = 3 & turno = FALSE): 0;
 									linha = 1 & coluna = 4 & turno = TRUE & tabuleiro[1][4] = 1: 1;
 									linha = 3 & coluna = 2 & turno = FALSE & tabuleiro[3][2] = 3: 3;
@@ -122,10 +220,12 @@ MODULE main
 
 									--[3][2]
 		next(tabuleiro[4][1]) :=	case
-									linha = 3 & coluna = 2 & (tabuleiro[3][2] = 2 & turno = TRUE) | (tabuleiro[1][4] = 3 & turno = FALSE): 0;
-									linha = 2 & coluna = 3 & turno = TRUE & tabuleiro[2][3] = 1: 1;
-									TRUE: tabuleiro[4][1];
+									--Deixa livre comendo ou andando
+									linha = 4 & coluna = 1 & (valido_andar | valido_comer): 0;
+									--Entra uma Pesa do P2 comendo ou andando
+									TRUE: tabuleiro[1][4];
 									esac;
+
 
 		next(tabuleiro[4][3]) :=	case
 
@@ -146,17 +246,23 @@ MODULE main
 		--NUMERO DE PECAS
 
 		next(num_pecas1) := case
-							--[1][2]
-							
+							--[1][4]
+							valido_comer :num_pecas1 -1;
 							TRUE: num_pecas1;
 							esac;
 
 		next(num_pecas2) := case
+							(tabuleiro[1][4] = 4 & tabuleiro[2][3] = 1 & tabuleiro[3][2] = 0) :{4,3,2,1,0};
 							TRUE: num_pecas2;
 							esac;
 		--ESTADO POSSIVEIS
+		--Só trocar do andando para o parado depois de achar uma casa valida
+		--Só trocar do parado para o vez depois de ceder a vez;
+		--Só finalizado quando Deus quer;
+		--Andar depois do parado;
+
 		next(estado) := 	case
-								estado = parado : {vez_de_jogar};
+								estado = parado & casa_valida = TRUE: {vez_de_jogar};
 								estado = vez_de_jogar : {andando};
 								estado = andando : {parado};
 								num_pecas1 = 0 | num_pecas2 = 0: {finalizado};
