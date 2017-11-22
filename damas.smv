@@ -6,6 +6,9 @@
 --	3 |-1_|_0_|-1_|_0_| 
 --	4 |_3_|-1_|_0_|-1_| 
 --			P2
+--						
+--			->	Direita (Sobe no Vetor)
+--			<-	Esquerda (Desce no Vetor)
 --
 --	Significados dos Blocos: 
 --  1 	-> P1.normal
@@ -20,11 +23,11 @@ MODULE main
 
 	VAR
 	    tabuleiro : array 1..4 of array 1..4 of {-1, 0, 1, 2, 3, 4};
-	    turno: boolean; --TRUE - J1 | FALSE - J2
+	    turno: boolean; --TRUE - Jogador1 | FALSE - Jogador2
 	    num_pecas1: 0..4;
 	    num_pecas2: 0..4;
 	    linha: {1,2,3,4};
-	    coluna: {1,2,3,4};
+	    coluna:{1,2,3,4};
 	    estado: {andando, parado, vez_de_jogar, finalizado};
 
 	DEFINE
@@ -39,17 +42,15 @@ MODULE main
 					linha - 1 > 0: linha - 1;
 					TRUE: linha;
 					esac;
-		colunaEsq :=case
-					TRUE: coluna;
-					esac;
-		colunaDir :=case
-					TRUE: coluna;
-					esac;
+
 		diagDir :=	case
-					TRUE: 1;
+					coluna + 1 < 0: coluna + 1; 
+					TRUE: coluna;
 					esac;
+
 		diagEsq :=	case
-					TRUE: 1;
+					turno = FALSE & coluna - 1 < 0: coluna - 1; 
+					TRUE: coluna;
 					esac;
 
 		--2 CASA
@@ -63,15 +64,11 @@ MODULE main
 						linha - 2 > 0: linha - 2;
 						TRUE: linha;
 						esac;
-		colunaEsq2 :=	case
-						TRUE: coluna;
-						esac;
-		colunaDir2 :=	case
-						TRUE: coluna;
-						esac;
+
 		diagDir2 :=	case
 					TRUE: 1;
 					esac;
+
 		diagEsq2 :=	case
 					TRUE: 1;
 					esac;
@@ -86,15 +83,11 @@ MODULE main
 						linha - 3 > 0: linha - 3;
 						TRUE: linha;
 						esac;
-		colunaEsq3 :=	case
-						TRUE: coluna;
-						esac;
-		colunaDir3 :=	case
-						TRUE: coluna;
-						esac;
+
 		diagDir3 :=	case
 					TRUE: 1;
 					esac;
+
 		diagEsq3 :=	case
 					TRUE: 1;
 					esac;
