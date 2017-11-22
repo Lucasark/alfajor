@@ -17,8 +17,7 @@
 --  4 	-> P2.Damas
 --  -1	-> Espaço Inacessível (Espaços Brancos)
 --  0	-> Espaço Vazio
---
---
+
 MODULE main
 
 	VAR
@@ -92,13 +91,37 @@ MODULE main
 					TRUE: 1;
 					esac;
 
-		valido_andar := case
-							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 1 & tabuleiro[linhaCima][diagEsq] = 0: TRUE;
-							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 4: case
-								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+		valido_andar := case--ATENÇÃO CONSERTAR A MOVIMENTAÇÃO DAS DAMAS
+							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 1 & (tabuleiro[linhaCima][diagEsq] = 0 | tabuleiro[linhaCima][diagDir] = 0): TRUE;
+							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 3 & (tabuleiro[linhaBaixo][diagEsq] = 0 | tabuleiro[linhaBaixo][diagDir] = 0): TRUE;
+							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 2: case
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
 								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
 								tabuleiro[linhaCima][diagEsq] = 0: TRUE;
 								TRUE: FALSE;
+								esac;
+							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 4: case
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0: TRUE;
+								tabuleiro[linhaCima][diagDir] = 0 & tabuleiro[linhaCima2][diagDir2] = 0 & tabuleiro[linhaCima3][diagEsq3] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 0: TRUE;
 								esac;
 						TRUE: FALSE;
 						esac;
