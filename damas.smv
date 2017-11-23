@@ -432,10 +432,150 @@ MODULE main
 		TRUE : tabuleiro[1][4];
 		esac;				
 					
-					
 		next(tabuleiro[2][1]) := case
-			TRUE : tabuleiro[2][1];
-		esac;
+	state = andando: case
+		turno = TRUE: case
+			linha=1 & coluna=2 & válido_andar:case
+				tabuleiro[1][2]= 1 : 1;
+				tabuleiro[1][2]= 2 : 2;
+			TRUE: tabuleiro[2][1];	 
+			esac;		
+			linha = 2 & coluna = 1 &(tabuleiro[2][1]=1|tabuleiro[2][1]=2|tabuleiro[2][1]=0): 0;
+			linha = 3 & coluna = 2 & válido_andar: case
+				tabuleiro[3][2]= 2 : 2;
+			TRUE: tabuleiro[2][1];	 
+			esac;	
+			linha = 4 & coluna = 3 & válido_andar: case
+				tabuleiro[4][3]= 2 : 2;
+				TRUE: tabuleiro[2][1];	 
+			esac;
+
+
+		turno = FALSE: case
+			linha=1 & coluna=2 & válido_andar:case
+				tabuleiro[1][2]= 4 : 4;
+				TRUE: tabuleiro[2][1];	 
+			esac;		
+			linha = 2 & coluna = 1 &(tabuleiro[2][1]=3|tabuleiro[2][1]=4|tabuleiro[2][1]=0): 0;
+			linha = 3 & coluna = 2 & válido_comer: case
+				tabuleiro[3][2]= 3 : 3;		
+				tabuleiro[3][2]= 4 : 4;
+			TRUE: tabuleiro[2][1];	 
+			esac;	
+			linha = 4 & coluna = 3 & válido_comer: case
+				tabuleiro[4][3]= 3 : 3;
+				tabuleiro[4][3]= 4 : 4;
+				TRUE: tabuleiro[2][1];	 
+			esac;
+	state = comendo : case
+		turno = TRUE: case			
+			linha = 1 & coluna=2 & valido_comer : case
+				coluna = 2: 0;
+				TRUE: tabuleiro[2][1];
+			esac;
+			linha = 2 & coluna = 1 &(tabuleiro[2][1]=1|tabuleiro[2][1]=2|tabuleiro[2][1]=0): 0;
+			linha = 3 & coluna = 2 & válido_comer: case
+				coluna = 2 : 0;
+			TRUE: tabuleiro[2][1];	 
+			esac;	
+			linha = 4 & coluna = 3 & válido_comer: case
+				tabuleiro[4][3]= 2 : 2;
+				TRUE: tabuleiro[2][1];	 
+			esac;
+
+
+		turno = FALSE: case
+			linha=1 & coluna=2 & válido_comer:case
+				coluna= 2 : 0;
+				TRUE: tabuleiro[2][1];	 
+			esac;		
+			linha = 2 & coluna = 1 &(tabuleiro[2][1]=3|tabuleiro[2][1]=4|tabuleiro[2][1]=0): 0;
+			linha = 3 & coluna = 2 & válido_comer: case
+				coluna = 2: 0;
+				TRUE: tabuleiro[2][1];	 
+			esac;	
+			linha = 4 & coluna = 3 & válido_comer: case
+				tabuleiro[4][3]= 3 : 3;
+				tabuleiro[4][3]= 4 : 4;
+				TRUE: tabuleiro[2][1];	 
+			esac;
+		
+		next(tabuleiro[2][3]) := case
+	state = andando: case
+		turno = TRUE: case
+			linha = 1 & (coluna=2 | coluna =4): case
+				coluna = 2 & tabuleiro[1][2] = 2: 2;
+				coluna = 4 & tabuleiro[1][4] = 2: 2; 
+				coluna = 2 & tabuleiro[1][2] = 1: 1;
+				coluna = 4 & tabuleiro[1][4] = 1: 1;	 
+				TRUE: tabuleiro[2][3];
+			esac;
+			linha = 2 & coluna = 3 &(tabuleiro[2][3]=1|tabuleiro[2][3]=2|tabuleiro[2][3]=3|tabuleiro[2][3]=4|tabuleiro[2][3]=0): 0;
+			linha = 3 & (coluna = 2 |coluna = 4): case
+				coluna = 2 & tabuleiro[3][2] = 2: 2;
+				coluna = 4 & tabuleiro[3][4] = 2: 2; 
+				TRUE: tabuleiro[2][3];	 
+			esac;
+				linha = 4 & coluna =1 & tabuleiro[2][3]=2:2;
+				TRUE: tabuleiro[2][3];
+			esac;
+
+		turno = FALSE: case
+			linha = 1 & (coluna=2 | coluna =4): case
+				coluna = 2 & tabuleiro[1][2] = 4: 4;
+				coluna = 4 & tabuleiro[1][4] = 4: 4; 
+					 
+				TRUE: tabuleiro[2][3];
+			esac;
+			linha = 2 & coluna = 3 &(tabuleiro[2][3]=1|tabuleiro[2][3]=2|tabuleiro[2][3]=3|tabuleiro[2][3]=4|tabuleiro[2][3]=0): 0;
+			linha = 3 & (coluna = 2 |coluna = 4): case
+				coluna = 2 & tabuleiro[3][2] = 3: 3;
+				coluna = 4 & tabuleiro[3][4] = 4: 4;
+				coluna = 2 & tabuleiro[3][2] = 4: 4;
+				coluna = 4 & tabuleiro[3][4] = 3: 3;  
+				TRUE: tabuleiro[2][3];	 
+			esac;
+				linha = 4 & coluna =1 & tabuleiro[2][3]=4:0;
+				TRUE: tabuleiro[2][3];
+			esac;
+
+	state = comendo : case
+		turno = TRUE: case			
+			linha = 1 & (coluna=2 | coluna =4): case
+				coluna = 2: 0;
+				coluna = 4: 0; 
+				TRUE: tabuleiro[2][3];
+			esac;
+			linha = 2 & coluna = 3 &(tabuleiro[2][3]=1|tabuleiro[2][3]=2|tabuleiro[2][3]=3|tabuleiro[2][3]=4|tabuleiro[2][3]=0): 0;
+			linha = 3 & (coluna = 2 |coluna = 4): case
+				coluna = 2 : 0;
+				coluna = 4 : 0; 
+				TRUE: tabuleiro[2][3];	 
+			esac;
+				linha = 4 & coluna =1 & tabuleiro[2][3]=2:2;
+				TRUE: tabuleiro[2][3];
+			esac;
+
+		turno = FALSE: case
+			linha = 1 & (coluna=2 | coluna =4): case
+				coluna = 2 : 0;
+				coluna = 4 : 0; 
+					 
+				TRUE: tabuleiro[2][3];
+			esac;
+			linha = 2 & coluna = 3 &(tabuleiro[2][3]=1|tabuleiro[2][3]=2|tabuleiro[2][3]=3|tabuleiro[2][3]=4|tabuleiro[2][3]=0): 0;
+			linha = 3 & (coluna = 2 |coluna = 4): case
+				coluna = 2 : 0;
+				coluna = 4 : 0;
+				  
+				TRUE: tabuleiro[2][3];	 
+			esac;
+				linha = 4 & coluna =1: cases
+					 tabuleiro[4][1]= 4:4;
+					 tabuleiro[4][1]=1:1;
+				TRUE: tabuleiro[2][3];
+			esac;
+	
 	
 		next(tabuleiro[2][3]) := case
 			TRUE : tabuleiro[2][1];
@@ -528,7 +668,8 @@ MODULE main
 			TRUE : tabuleiro[3][4];
 		esac;
 			
-			
+					
+
 		next(tabuleiro[4][1]) := case
 			state = andando : case
 				turno = TRUE : case
