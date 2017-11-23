@@ -213,29 +213,29 @@ MODULE main
 							esac;
 						
 		next(tabuleiro[1][2]) := case
-		state = andando : case
+		estado = andando : case
 				turno = TRUE : 0;	
 				turno = FALSE : 3;
 			TRUE : tabuleiro[1][2];
 			esac;
 		
-		state = comendo : case
+		estado = comendo : case
 				turno = TRUE : 0;
-				sturno = FALSE : 3;
+				turno = FALSE : 3;
 			TRUE : tabuleiro[1][2];
 			esac;
 		TRUE : tabuleiro[1][2];
 		esac;
 
 		next(tabuleiro[1][4]) := case
-			state = andando : case	
+			estado = andando : case	
 				turno = TRUE : 0;
 				turno = FALSE : 3;
 				TRUE : tabuleiro[1][4];
 			esac;
 							
 					
-			state = comendo : case
+			estado = comendo : case
 				turno = TRUE : 0;
 				turno = FALSE : 3;
 				TRUE : tabuleiro[1][4];
@@ -244,13 +244,13 @@ MODULE main
 		esac;
 					
 		next(tabuleiro[2][1]) := case
-			state = andando : case	
+			estado = andando : case	
 				turno = TRUE : {0,1};
 				turno = FALSE : {3,0};
 				TRUE : tabuleiro[2][1];
 			esac;
 							
-			state = comendo : case
+			estado = comendo : case
 				turno = TRUE : 0;
 				turno = FALSE : 3;
 				TRUE : tabuleiro[2][1];	
@@ -259,13 +259,13 @@ MODULE main
 		esac;			
 				
 		next(tabuleiro[2][3]) := case
-			state = andando : case
+			estado = andando : case
 				turno = TRUE : {0,1};	
 				turno = FALSE : {0,3};
 				TRUE : tabuleiro[2][3];
 			esac;
 			
-			state = comendo : case
+			estado = comendo : case
 				turno = TRUE : 0;
 				turno = FALSE : 3;
 				TRUE : tabuleiro[2][3];
@@ -274,13 +274,13 @@ MODULE main
 		esac;	
 
 		next(tabuleiro[3][2]) := case
-			state = andando : case
+			estado = andando : case
 				turno = TRUE : {0,1};
 				turno = FALSE : {0,3};
 				TRUE : tabuleiro[3][2];
 			esac;
 			
-			state = comendo : case
+			estado = comendo : case
 				turno = TRUE : 1;
 				turno = FALSE : 0;
 				TRUE : tabuleiro[3][2];
@@ -289,13 +289,13 @@ MODULE main
 		esac;
 
 		next(tabuleiro[3][4]) := case
-			state = andando : case
+			estado = andando : case
 				turno = TRUE : {0,1};
 				turno = FALSE : {0,3};
 				TRUE : tabuleiro[3][4];
 			esac;
 			
-			state = comendo : case
+			estado = comendo : case
 				turno = TRUE : 1;
 				turno = FALSE : 0;
 				TRUE : tabuleiro[3][4];
@@ -304,13 +304,13 @@ MODULE main
 		esac;	
 
 		next(tabuleiro[4][1]) := case
-			state = andando : case	
+			estado = andando : case	
 				turno = TRUE : 1;
 				turno = FALSE : {3,0};
 				TRUE : tabuleiro[4][1];
 			esac;
 			
-			state = comendo : case
+			estado = comendo : case
 				turno = FALSE : 0;
 				TRUE : tabuleiro[4][1];
 			esac;
@@ -318,13 +318,13 @@ MODULE main
 		esac;	
 				
 		next(tabuleiro[4][3]) := case
-			state = andando : case	
+			estado = andando : case	
 				turno = TRUE : 1;
 				turno = FALSE : 0;
 				TRUE : tabuleiro[4][3];
 			esac;
 					
-			state = comendo : case
+			estado = comendo : case
 				turno = TRUE : 1;
 				turno = FALSE : 0;
 				TRUE : tabuleiro[4][3];
@@ -332,8 +332,6 @@ MODULE main
 		TRUE : tabuleiro[4][3];
 		esac;							
 		
-					
-
 SPEC
-	AF(estado = finalizado)
+	AF(tabuleiro[2][3] = 1)
 		
