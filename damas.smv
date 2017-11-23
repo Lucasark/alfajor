@@ -27,7 +27,7 @@ MODULE main
 	    num_pecas2: 0..4;
 	    linha: {1,2,3,4};
 	    coluna:{1,2,3,4};
-	    estado: {andando, parado, vez_de_jogar, finalizado};
+	    estado: {andando, parado, finalizado, comendo};
 
 	DEFINE
 
@@ -90,8 +90,8 @@ MODULE main
 		diagEsq3 :=	case
 					TRUE: 1;
 					esac;
-
-		valido_andar := case--ATENÇÃO CONSERTAR A MOVIMENTAÇÃO DAS DAMAS
+		--ATENÇÃO CONSERTAR A MOVIMENTAÇÃO DAS DAMAS
+		valido_andar := case
 							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 1 & (tabuleiro[linhaCima][diagEsq] = 0 | tabuleiro[linhaCima][diagDir] = 0): TRUE;
 							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 3 & (tabuleiro[linhaBaixo][diagEsq] = 0 | tabuleiro[linhaBaixo][diagDir] = 0): TRUE;
 							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 2: case
@@ -127,11 +127,43 @@ MODULE main
 						esac;
 
 		valido_comer := case
+							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 1: case
+								tabuleiro[linhaCima][diagDir] = 3 | tabuleiro[linhaCima][diagDir] = 4 & tabuleiro[linhaCima2][diagDir2] = 0: TRUE;
+								tabuleiro[linhaCima][diagEsq] = 3 | tabuleiro[linhaCima][diagEsq] = 4 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								TRUE: FALSE;
+								esac;
 
+							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 2: case
+								tabuleiro[linhaCima][diagDir] = 3 | tabuleiro[linhaCima][diagDir] = 4 & tabuleiro[linhaCima2][diagDir2] = 0: TRUE:
+								tabuleiro[linhaBaixo][diagDir] = 3 | tabuleiro[linhaBaixo][diagDir] = 4 & tabuleiro[linhaBaixo2][diagDir2] = 0: TRUE;
+								
+
+								tabuleiro[linhaCima][diagEsq] = 3 | tabuleiro[linhaCima][diagEsq] = 4 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaBaixo][diagEsq] = 3 | tabuleiro[linhaBaixo][diagEsq] = 4 & tabuleiro[linhaBaixo2][diagEsq2] = 0: TRUE;
+								TRUE: FALSE;
+								esac;
+
+							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 3: case 
+								tabuleiro[linhaBaixo][diagDir] = 1 | tabuleiro[linhaBaixo][diagDir] = 2 & tabuleiro[linhaBaixo2][diagDir2] = 0: TRUE;
+								tabuleiro[linhaBaixo][diagEsq] = 1 | tabuleiro[linhaBaixo][diagEsq] = 2 & tabuleiro[linhaBaixo2][diagEsq2] = 0: TRUE;
+								TRUE: FALSE;
+								esac;
+
+							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 4: case
+								tabuleiro[linhaCima][diagDir] = 1 | tabuleiro[linhaCima][diagDir] = 2 & tabuleiro[linhaCima2][diagDir2] = 0: TRUE:
+								tabuleiro[linhaBaixo][diagDir] = 1 | tabuleiro[linhaBaixo][diagDir] = 2 & tabuleiro[linhaBaixo2][diagDir2] = 0: TRUE;
+								
+
+								tabuleiro[linhaCima][diagEsq] = 1 | tabuleiro[linhaCima][diagEsq] = 2 & tabuleiro[linhaCima2][diagEsq2] = 0: TRUE;
+								tabuleiro[linhaBaixo][diagEsq] = 1 | tabuleiro[linhaBaixo][diagEsq] = 2 & tabuleiro[linhaBaixo2][diagEsq2] = 0: TRUE;
+								TRUE: FALSE;
+								esac;
 						TRUE: FALSE;
 						esac;
-		casa_valida :=	case
 
+		casa_valida :=	case
+						(turno = TRUE & (tabuleiro[linha][coluna] = 1 | tabuleiro[linha][coluna] = 2)) | 
+						(turno = FALSE & (tabuleiro[linha][coluna] = 3 | tabuleiro[linha][coluna] = 4)): TRUE;
 						TRUE: FALSE;
 						esac;
 
@@ -199,9 +231,22 @@ MODULE main
 
 									--[2][3]
 		next(tabuleiro[1][4]) := 	case
-									--Deixa livre comendo ou andando
+
 									linha = 1 & coluna = 4 & (valido_andar | valido_comer): 0;
-									--Entra uma peça comendo ou andando FAZER
+
+									linha = 2 & coluna = 3 & valido_andar: case
+										 turno = TRUE & tabuleiro[2][3] = 2: 2;
+										 turno = FALSE & (tabuleiro[2][3] = 3 | tabuleiro[2][3] = 4): 4;
+										 TRUE : tabuleiro[1][4];
+										 esac;
+									linha = 3 & coluna = 2 & valido_andar & valido_comer: case
+										turno = TRUE: 0;
+										turno = FALSE: 0;
+										TRUE: tabuleiro[1][4];
+										esac;
+									linha = 4 & coluna = 1 & valido_andar & valido_comer: case
+										TRUE: tabuleiro[1][4];
+										esac;
 									TRUE: tabuleiro[1][4];
 									esac;
 
@@ -213,18 +258,11 @@ MODULE main
 
 									---M1 [3][2] | [3][4] ---M2 [1][4]
 		next(tabuleiro[2][3]) := 	case
-									linha = 2 & coluna = 3 & (tabuleiro[2][3] = 1 & turno = TRUE) | (tabuleiro[2][3] = 3 & turno = FALSE): 0;
-									linha = 1 & coluna = 4 & turno = TRUE & tabuleiro[1][4] = 1: 1;
-									linha = 3 & coluna = 2 & turno = FALSE & tabuleiro[3][2] = 3: 3;
-									linha = 3 & coluna = 4 & turno = FALSE & tabuleiro[3][4] = 3: 3;
+
 									TRUE: tabuleiro[2][3];
 									esac;
 
 		next(tabuleiro[3][2]) :=	case
-									linha = 3 & coluna = 2 & (tabuleiro[2][3] = 1 & turno = TRUE) | (tabuleiro[2][3] = 3 & turno = FALSE): 0;
-									linha = 2 & coluna = 3 & turno = TRUE & tabuleiro[2][3] = 1: 1;
-									linha = 3 & coluna = 2 & turno = FALSE & tabuleiro[3][2] = 3: 3;
-									linha = 3 & coluna = 4 & turno = FALSE & tabuleiro[3][4] = 3: 3;
 									TRUE: tabuleiro[3][2];
 									esac;
 
@@ -250,25 +288,23 @@ MODULE main
 		--LINHAS E COLUNAS
 
 		next(linha) := 	case
-						tabuleiro[1][4] = 1 & turno = TRUE: {1,2,3,4};
-						TRUE: linha;
+						estado = parado: {1,2,3,4};
 						esac;
 
 		next(coluna) := case
-						tabuleiro[1][4] = 1 & turno = TRUE: {2,3,4};
+						estado = parado: {1,2,3,4};
 						TRUE: coluna;
 						esac;
 
 		--NUMERO DE PECAS
 
 		next(num_pecas1) := case
-							--[1][4]
 							valido_comer :num_pecas1 -1;
 							TRUE: num_pecas1;
 							esac;
 
 		next(num_pecas2) := case
-							(tabuleiro[1][4] = 4 & tabuleiro[2][3] = 1 & tabuleiro[3][2] = 0) :{4,3,2,1,0};
+							valido_comer :num_pecas2 -1;
 							TRUE: num_pecas2;
 							esac;
 		--ESTADO POSSIVEIS
@@ -278,16 +314,19 @@ MODULE main
 		--Andar depois do parado;
 
 		next(estado) := 	case
-								estado = parado & casa_valida = TRUE: {vez_de_jogar};
-								estado = vez_de_jogar : {andando};
-								estado = andando : {parado};
-								num_pecas1 = 0 | num_pecas2 = 0: {finalizado};
+								estado = parado & casa_valida = TRUE:	case
+									valido_comer & valido_andar: comendo;
+									valido_andar: andando;
+									TRUE: parado; 
+									esac;
+								estado = andando | estado = comendo: parado;
+								num_pecas1 = 0 | num_pecas2 = 0: finalizado;
 							TRUE: estado;
 							esac;
 
 		--turnos
 		next(turno) := 	case
-						estado = vez_de_jogar: 
+						estado = parado: 
 							case 
 								turno = TRUE: FALSE;
 								turno = FALSE: TRUE;
@@ -297,5 +336,5 @@ MODULE main
 						esac;
 
 		SPEC
-			AF(estado = finalizado);
+			AF(estado = finalizado)
 		
