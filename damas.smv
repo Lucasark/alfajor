@@ -94,6 +94,7 @@ MODULE main
 					coluna - 3 < 0: coluna - 3; 
 					TRUE: coluna;
 					esac;
+
 		valido_andar := case
 							num_pecas1 > 0 & turno = TRUE & tabuleiro[linha][coluna] = 1 & (tabuleiro[linhaCima][diagEsq] = 0 | tabuleiro[linhaCima][diagDir] = 0): TRUE;
 							num_pecas2 > 0 & turno = FALSE & tabuleiro[linha][coluna] = 3 & (tabuleiro[linhaBaixo][diagEsq] = 0 | tabuleiro[linhaBaixo][diagDir] = 0): TRUE;
@@ -212,126 +213,128 @@ MODULE main
 							TRUE: turno;
 							esac;
 						
-		next(tabuleiro[1][2]) := case
-		estado = andando : case
-				turno = TRUE : 0;	
-				turno = FALSE : 3;
-			TRUE : tabuleiro[1][2];
-			esac;
-		
-		estado = comendo : case
-				turno = TRUE : 0;
-				turno = FALSE : 3;
-			TRUE : tabuleiro[1][2];
-			esac;
+next(tabuleiro[1][2]) := case
+	estado = andando & ((linhaCima=1 & diagDir=2)|(linhaBaixo=1 & diagDir=2)|(linhaCima=1 & diagEsq=2)|(linhaBaixo=1 & diagEsq=2)): case
+		turno = TRUE   : 0;	
+		turno = FALSE : 3;
 		TRUE : tabuleiro[1][2];
-		esac;
+	esac;
+	
+	estado = comendo & ((linhaCima2=1 & diagDir2=2)|(linhaBaixo2=1 & diagDir2=2)|(linhaCima2=1 & diagEsq2=2)|(linhaBaixo2=1 & diagEsq2=2)): case
+		turno = TRUE : 0;
+		turno = FALSE : 3;
+		TRUE : tabuleiro[1][2];
+	esac;
+TRUE : tabuleiro[1][2];
+esac;
 
-		next(tabuleiro[1][4]) := case
-			estado = andando : case	
-				turno = TRUE : 0;
-				turno = FALSE : 3;
-				TRUE : tabuleiro[1][4];
-			esac;
-							
-					
-			estado = comendo : case
-				turno = TRUE : 0;
-				turno = FALSE : 3;
-				TRUE : tabuleiro[1][4];
-			esac;
+next(tabuleiro[1][4]) := case
+	estado = andando & ((linhaCima=1 & diagDir=4)|(linhaBaixo=1 & diagDir=4)|(linhaCima=1 & diagEsq=4)|(linhaBaixo=1 & diagEsq=4)): case	
+		turno = TRUE : 0;
+		turno = FALSE : 3;
 		TRUE : tabuleiro[1][4];
-		esac;
+	esac;
 					
-		next(tabuleiro[2][1]) := case
-			estado = andando : case	
-				turno = TRUE : {0,1};
-				turno = FALSE : {3,0};
-				TRUE : tabuleiro[2][1];
-			esac;
-							
-			estado = comendo : case
-				turno = TRUE : 0;
-				turno = FALSE : 3;
-				TRUE : tabuleiro[2][1];	
-			esac;
+			
+	estado = comendo & ((linhaCima2=1 & diagDir2=4)|(linhaBaixo2=1 & diagDir2=4)|(linhaCima2=1 & diagEsq2=4)|(linhaBaixo2=1 & diagEsq2=4)) : case
+		turno = TRUE : 0;
+		turno = FALSE : 3;
+		TRUE : tabuleiro[1][4];
+	esac;
+TRUE : tabuleiro[1][4];
+esac;
+			
+next(tabuleiro[2][1]) := case
+	estado = andando & ((linhaCima=2 & diagDir=1)|(linhaBaixo=2 & diagDir=1)|(linhaCima=2 & diagEsq=1)|(linhaBaixo=2 & diagEsq=1)): case	
+		turno = TRUE : {0,1};
+		turno = FALSE : {3,0};
 		TRUE : tabuleiro[2][1];
-		esac;			
-				
-		next(tabuleiro[2][3]) := case
-			estado = andando : case
-				turno = TRUE : {0,1};	
-				turno = FALSE : {0,3};
-				TRUE : tabuleiro[2][3];
-			esac;
-			
-			estado = comendo : case
-				turno = TRUE : 0;
-				turno = FALSE : 3;
-				TRUE : tabuleiro[2][3];
-			esac;
-		TRUE : tabuleiro[2][3];
-		esac;	
-
-		next(tabuleiro[3][2]) := case
-			estado = andando : case
-				turno = TRUE : {0,1};
-				turno = FALSE : {0,3};
-				TRUE : tabuleiro[3][2];
-			esac;
-			
-			estado = comendo : case
-				turno = TRUE : 1;
-				turno = FALSE : 0;
-				TRUE : tabuleiro[3][2];
-			esac;
-		TRUE : tabuleiro[3][2];
-		esac;
-
-		next(tabuleiro[3][4]) := case
-			estado = andando : case
-				turno = TRUE : {0,1};
-				turno = FALSE : {0,3};
-				TRUE : tabuleiro[3][4];
-			esac;
-			
-			estado = comendo : case
-				turno = TRUE : 1;
-				turno = FALSE : 0;
-				TRUE : tabuleiro[3][4];
-			esac;
-		TRUE : tabuleiro[3][4];
-		esac;	
-
-		next(tabuleiro[4][1]) := case
-			estado = andando : case	
-				turno = TRUE : 1;
-				turno = FALSE : {3,0};
-				TRUE : tabuleiro[4][1];
-			esac;
-			
-			estado = comendo : case
-				turno = FALSE : 0;
-				TRUE : tabuleiro[4][1];
-			esac;
-		TRUE : tabuleiro[4][1];
-		esac;	
-				
-		next(tabuleiro[4][3]) := case
-			estado = andando : case	
-				turno = TRUE : 1;
-				turno = FALSE : 0;
-				TRUE : tabuleiro[4][3];
-			esac;
+	esac;
 					
-			estado = comendo : case
-				turno = TRUE : 1;
-				turno = FALSE : 0;
-				TRUE : tabuleiro[4][3];
-			esac;
-		TRUE : tabuleiro[4][3];
-		esac;							
+	estado = comendo & ((linhaCima2=2 & diagDir2=1)|(linhaBaixo2=2 & diagDir2=1)|(linhaCima2=2 & diagEsq2=1)|(linhaBaixo2=2 & diagEsq2=1)): case
+		turno = TRUE : 0;
+		turno = FALSE : 3;
+		TRUE : tabuleiro[2][1];	
+	esac;
+TRUE : tabuleiro[2][1];
+esac;			
 		
+next(tabuleiro[2][3]) := case
+	estado = andando & ((linhaCima=2 & diagDir=3)|(linhaBaixo=2 & diagDir=3)|(linhaCima=2 & diagEsq=3)|(linhaBaixo=2 & diagEsq=3)): case
+		turno = TRUE : {0,1};	
+		turno = FALSE : {0,3};
+		TRUE : tabuleiro[2][3];
+	esac;
+	
+	estado = comendo & ((linhaCima2=2 & diagDir2=3)|(linhaBaixo2=2 & diagDir2=3)|(linhaCima2=2 & diagEsq2=3)|(linhaBaixo2=2 & diagEsq2=3)) : case
+		turno = TRUE : 0;
+		turno = FALSE : 3;
+		TRUE : tabuleiro[2][3];
+	esac;
+TRUE : tabuleiro[2][3];
+esac;	
+
+next(tabuleiro[3][2]) := case
+	estado = andando & ((linhaCima=3 & diagDir=2)|(linhaBaixo=3 & diagDir=2)|(linhaCima=3 & diagEsq=2)|(linhaBaixo=3 & diagEsq=2)) : case
+		turno = TRUE : {0,1};
+		turno = FALSE : {0,3};
+		TRUE : tabuleiro[3][2];
+	esac;
+	
+	estado = comendo & ((linhaCima2=3 & diagDir2=2)|(linhaBaixo2=3 & diagDir2=2)|(linhaCima2=3 & diagEsq2=2)|(linhaBaixo2=3 & diagEsq2=2)) : case
+		turno = TRUE : 1;
+		turno = FALSE : 0;
+		TRUE : tabuleiro[3][2];
+	esac;
+TRUE : tabuleiro[3][2];
+esac;
+
+next(tabuleiro[3][4]) := case
+	estado = andando & ((linhaCima=3 & diagDir=4)|(linhaBaixo=3 & diagDir=4)|(linhaCima=3 & diagEsq=4)|(linhaBaixo=3 & diagEsq=4)): case
+		turno = TRUE : {0,1};
+		turno = FALSE : {0,3};
+		TRUE : tabuleiro[3][4];
+	esac;
+	
+	estado = comendo & ((linhaCima2=3 & diagDir2=4)|(linhaBaixo2=3 & diagDir2=4)|(linhaCima2=3 & diagEsq2=4)|(linhaBaixo2=3 & diagEsq2=4)): case
+		turno = TRUE : 1;
+		turno = FALSE : 0;
+		TRUE : tabuleiro[3][4];
+	esac;
+TRUE : tabuleiro[3][4];
+esac;	
+
+next(tabuleiro[4][1]) := case
+	estado = andando & ((linhaCima=4 & diagDir=1)|(linhaBaixo=4 & diagDir=1)|(linhaCima=4 & diagEsq=1)|(linhaBaixo=4 & diagEsq=1)): case	
+		turno = TRUE : 1;
+		turno = FALSE : {3,0};
+		TRUE : tabuleiro[4][1];
+	esac;
+	
+	estado = comendo & ((linhaCima2=4 & diagDir2=1)|(linhaBaixo2=4 & diagDir2=1)|(linhaCima2=4 & diagEsq2=1)|(linhaBaixo2=4 & diagEsq2=1)): case
+		turno = FALSE : 0;
+		TRUE : tabuleiro[4][1];
+	esac;
+TRUE : tabuleiro[4][1];
+esac;	
+		
+next(tabuleiro[4][3]) := case
+	estado = andando & ((linhaCima=4 & diagDir=3)|(linhaBaixo=4 & diagDir=3)|(linhaCima=4 & diagEsq=3)|(linhaBaixo=4 & diagEsq=3)): case	
+		turno = TRUE : 1;
+		turno = FALSE : 0;
+		TRUE : tabuleiro[4][3];
+	esac;
+			
+	estado = comendo & ((linhaCima2=4 & diagDir2=3)|(linhaBaixo2=4 & diagDir2=3)|(linhaCima2=4 & diagEsq2=3)|(linhaBaixo2=4 & diagEsq2=3)): case
+		turno = TRUE : 1;
+		turno = FALSE : 0;
+		TRUE : tabuleiro[4][3];
+	esac;
+TRUE : tabuleiro[4][3];
+esac;								
+		
+					
+
 SPEC
-	AF(tabuleiro[2][3] = 1)
+	EF(estado = andando)
 		
