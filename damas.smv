@@ -167,6 +167,7 @@ MODULE main
 	ASSIGN
 		next(linha) := 	case
 						estado = parado: {1,2,3,4};
+						TRUE linha;
 						esac;
 
 		next(coluna) := case
