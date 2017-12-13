@@ -21,7 +21,7 @@
 MODULE main
 
 	VAR
-	    tabuleiro : array 1..4 of array 1..4 of {-1, 0, 1, 3};
+	    tabuleiro : array 1..4 of array 1..4 of {-1,0,1,2,3,4};
 	    turno: boolean; --TRUE - Jogador1 | FALSE - Jogador2
 	    num_pecas1: 0..4;
 	    num_pecas2: 0..4;
@@ -192,13 +192,13 @@ MODULE main
 		--Andar depois do parado;
 
 		next(estado) := 	case
+								num_pecas1 = 0 | num_pecas2 = 0: finalizado;
 								estado = parado & casa_valida = TRUE:	case
 									valido_comer & valido_andar: comendo;
 									valido_andar: andando;
 									TRUE: parado; 
 									esac;
 								estado = andando | estado = comendo: parado;
-								num_pecas1 = 0 | num_pecas2 = 0: finalizado;
 							TRUE: estado;
 							esac;
 
